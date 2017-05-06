@@ -13,11 +13,11 @@ public class Arquivo {
 	BufferedWriter writer;
 	String entrada, saida;
 	
-	public Arquivo(String saida) {
-		//this.entrada = entrada;
+	public Arquivo(String entrada,String saida) {
+		this.entrada = entrada;
 		this.saida = saida;
 		try {
-			//scanner = new Scanner(new File(entrada));
+			scanner = new Scanner(new File(entrada));
 			writer = new BufferedWriter(new FileWriter(saida));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
