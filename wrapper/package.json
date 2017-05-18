@@ -1,0 +1,16 @@
+{
+  "name": "ri_wine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "crawler": "^1.0.5",
+    "express": "^4.15.3",
+    "mongoose": "^4.9.9"
+  }
+}
