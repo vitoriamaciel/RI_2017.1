@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+
 var Wine = new Schema({
   titulo: {
     type: String,
@@ -19,6 +20,10 @@ var Wine = new Schema({
     required: true
   },
   classificacao: {
+    type: String,
+    required: true
+  },
+  URL: {
     type: String,
     required: true
   }

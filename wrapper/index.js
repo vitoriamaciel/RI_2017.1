@@ -2,128 +2,14 @@ const Crawler = require('crawler');
 var mongoose = require('mongoose');
 var Wine = require('./models/Wine');
 
-var wineWrapper = new Crawler({
-    rateLimit: 2000,
-    maxConnections: 1,
-    callback: function(error, res, done) {
-        if(error) {
-            console.log(error)
-        } else {
+var wineWrapper = require('./WINEWrapper');
+   
 
-            console.log("--WINE--");
-            var $ = res.$;
-            var productName = $('#boxProduto h1').first().text();
-            var conteudo = $('.fichaTecnica ul li').children().eq(1).text();
-            var classificacao = $('.fichaTecnica ul li').children().eq(5).text();
-            var uva = $('.fichaTecnica ul li').children().eq(7).text();
-            var teor = $('.fichaTecnica ul li').children().eq(9).text();
-            //console.log($('.fichaTecnica ul').first().text());
-            console.log('nome: ' + productName.trim());
-            console.log('conteudo: ' + conteudo.trim());
-            console.log('classificacao: ' + classificacao);
-            console.log('uva: ' + uva);
-            console.log('teor: ' + teor);
+var emporioWrapper = require('./emporiowrapper');
+ 
 
-            console.log("--WINE FIM--\n");
-            //console.log($('.fichaTecnica ul li').children().text());
-            var wine = new Wine({
-                titulo: productName.trim(),
-                volume: conteudo.trim(),
-                uva: uva,
-                teorAlcoolico: teor,
-                classificacao: classificacao
-            });
-            wine.save(function (err) {
-                if (err){
-                    done();
-                }
-                console.log(productName + " SAVED SUCCESS");
-            })
-        }
-        done();
-    }
-});
-
-var emporioWrapper = new Crawler({
-    rateLimit: 2000,
-    maxConnections: 1,
-    callback: function(error, res, done) {
-        if(error) {
-            console.log(error)
-        } else {
-            console.log("--EMPORIO--");
-            var $ = res.$;
-            var productName = $('.productName').first().text();
-            var conteudo = $('.value-field.Volume').text();
-            var classificacao = $('.value-field.Tipo').text();
-            var uva = $('.value-field.Uva').text();
-            var teor = $('.value-field.Teor-Alcoolico').text();
-            //console.log($('.fichaTecnica ul').first().text());
-            console.log('nome: ' + productName.trim());
-            console.log('conteudo: ' + conteudo.trim());
-            console.log('classificacao: ' + classificacao);
-            console.log('uva: ' + uva);
-            console.log('teor: ' + teor);
-            //console.log($('.fichaTecnica ul li').children().text());
-
-            console.log("-- FIM EMPORIO--\N");
-            var wine = new Wine({ 
-                titulo: productName.trim(),
-                volume: conteudo.trim(),
-                uva: uva,
-                teorAlcoolico: teor,
-                classificacao: classificacao
-            });
-            wine.save(function (err) {
-                if (err){
-                    done();
-                }
-                console.log(productName + " SAVED SUCCESS");
-            })
-        }
-        done();
-    }
-});
-
-var vinhosevinhosWrapper = new Crawler({
-    rateLimit: 2000,
-    maxConnections: 1,
-    callback: function(error, res, done) {
-        if(error) {
-            console.log(error)
-        } else {
-            console.log("--VIHNOS E VINHOS--");
-            var $ = res.$;
-            var productName = $('.product-name').text();
-            var conteudo = $('#product-attribute-specs-table').children().eq(7).children().eq(1).text();
-            var classificacao = $('#product-attribute-specs-table').children().eq(5).children().eq(1).text();
-            var uva = $('#product-attribute-specs-table').children().eq(4).children().eq(1).text();
-            var teor = $('.alcool').text();
-            //console.log($('.fichaTecnica ul').first().text());
-            console.log('nome: ' + productName.trim());
-            console.log('conteudo: ' + conteudo.trim());
-            console.log('classificacao: ' + classificacao);
-            console.log('uva: ' + uva);
-            console.log('teor: ' + teor);
-            //console.log($('.fichaTecnica ul li').children().text());
-        }
-        console.log("-- FIM VINHOS E VINHOS--");
-        var wine = new Wine({ 
-                titulo: productName.trim(),
-                volume: conteudo.trim(),
-                uva: uva,
-                teorAlcoolico: teor,
-                classificacao: classificacao
-            });
-            wine.save(function (err) {
-                if (err){
-                    done();
-                }
-                console.log(productName + " SAVED SUCCESS");
-            })
-        done();
-    }
-});
+var vinhosevinhosWrapper = require('./vinhosevinhoswrapper');
+   
 
 var links = 
 [
@@ -339,11 +225,11 @@ db.once('open', function () {
         if(i % 2 == 0){
             if(links[i+1] == 1) {
                 if(links[i].indexOf('www.wine.com.br') > 0) {
-                    wineWrapper.queue(links[i]);
+                    wineWrapper(links[i]);
                 } else if(links[i].indexOf('www.emporio.com') > 0) {
-                    emporioWrapper.queue(links[i]);
+                    emporioWrapper(links[i]);
                 } else if(links[i].indexOf('www.vinhosevinhos.com') > 0) {
-                    vinhosevinhosWrapper.queue(links[i]);
+                    vinhosevinhosWrapper(links[i]);
                 }
             }
         }
